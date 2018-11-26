@@ -10,13 +10,13 @@ public class Broad : MonoBehaviour {
 	}
 	public float speed = 1.0f;
 	public Bound escapeRange;
+	public bool isDebug = true;
 	// Use this for initialization
-	void Start () {
-		
+	void Start () {		
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update(){
 		for (var i = 0; i < transform.childCount; i++) {
 			var child = transform.GetChild (i);
 			var pos = child.localPosition;
@@ -25,6 +25,13 @@ public class Broad : MonoBehaviour {
 			if (IsOutOfBound (child)) {
 				Destroy (child.gameObject);
 			}
+		}
+
+		if (isDebug){
+			Debug.DrawLine(escapeRange.max, new Vector3 (escapeRange.max.x, escapeRange.min.y));
+			Debug.DrawLine(escapeRange.max, new Vector3 (escapeRange.min.x, escapeRange.max.y));
+			Debug.DrawLine(escapeRange.min, new Vector3 (escapeRange.max.x, escapeRange.min.y));
+			Debug.DrawLine(escapeRange.min, new Vector3 (escapeRange.min.x, escapeRange.max.y));
 		}
 	}
 

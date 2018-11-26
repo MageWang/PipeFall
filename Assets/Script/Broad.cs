@@ -11,12 +11,15 @@ public class Broad : MonoBehaviour {
 	public float speed = 1.0f;
 	public Bound escapeRange;
 	public bool isDebug = true;
+	public bool isStart = false;
 	// Use this for initialization
 	void Start () {		
 	}
 	
 	// Update is called once per frame
 	void Update(){
+		if (!isStart)
+			return;
 		for (var i = 0; i < transform.childCount; i++) {
 			var child = transform.GetChild (i);
 			var pos = child.localPosition;

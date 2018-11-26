@@ -85,6 +85,8 @@ MonoBehaviour:
   parent: {fileID: 0}
   target: {fileID: 1762968625668236}
   gen: {fileID: 0}
+  x: 0
+  y: 0
 --- !u!114 &114448643587453860
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -96,6 +98,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e9e48cb08796540bc22eced11f7aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progress: 0
+  speed: 0
+  dirs: 0000000000000000
+  incomeDir: 0
+  outcomeDir: 0
+  neighbors:
+  - {fileID: 0}
+  - {fileID: 0}
+  x: -1
+  y: -1
 --- !u!212 &212163076763779170
 SpriteRenderer:
   m_ObjectHideFlags: 1

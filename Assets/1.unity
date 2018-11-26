@@ -212,6 +212,7 @@ MonoBehaviour:
   countx: 6
   county: 1
   distance: {x: 0.322, y: 0}
+  y: 10
 --- !u!4 &613617160
 Transform:
   m_ObjectHideFlags: 0
@@ -628,7 +629,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1866085631}
-  - component: {fileID: 1866085630}
+  - component: {fileID: 1866085632}
   m_Layer: 0
   m_Name: BrickInitGen
   m_TagString: Untagged
@@ -636,22 +637,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1866085630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1866085629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8e1b17d6c3868d4cbb720dbd5812748, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1921091756}
-  target: {fileID: 1668502516731460, guid: fefedb1a77a229e4092ecb6cf3b52f1a, type: 2}
-  countx: 6
-  county: 9
-  distance: {x: 0.322, y: 0.322}
 --- !u!4 &1866085631
 Transform:
   m_ObjectHideFlags: 0
@@ -665,6 +650,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1866085632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1866085629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f6436d23193f545a17168b7215fa15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 1921091756}
+  target: {fileID: 1668502516731460, guid: fefedb1a77a229e4092ecb6cf3b52f1a, type: 2}
+  countx: 6
+  county: 9
+  distance: {x: 0.322, y: 0.322}
 --- !u!1 &1921091754
 GameObject:
   m_ObjectHideFlags: 0

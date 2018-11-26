@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
-	public enum BrickDir{
+	public enum BrickDir
+	{
+		none,
 		up,
 		down,
 		left,
-		right,
-		none
+		right
 	}
 	static public List<Brick> bricks = new List<Brick>();
 	RectTransform rectTransform;
 	public float progress = 0.0f;
 	public float speed = 0.0f;
-	public BrickDir[] brickID = new BrickDir[2];
+	public BrickDir[] dirs = new BrickDir[2];
 	public BrickDir incomeDir = BrickDir.none;
 	public BrickDir outcomeDir = BrickDir.none;
 	public Brick[] neighbors = new Brick[2];
@@ -33,11 +34,41 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		ResetNeighbors();
 	}
 
 	void ResetNeighbors(){
+		if(x < 0 || y < 0)return;
 		for(var i = 0; i < bricks.Count; i++){
+			var brick = bricks[i];
+			for (var j = 0; j < dirs.Length; j++){
+				var dir = dirs[j];
+				if(dir == BrickDir.none)continue;
+				if(dir == BrickDir.left){
+					if(brick.x == x-1 && brick.y == y && x-1 > 0){
+						neighbors[j]=brick;
+					}
+					continue;
+				}
+				if(dir == BrickDir.right){
+					if(brick.x == x+1 && brick.y == y){
+						neighbors[j]=brick;
+					}
+					continue;
+				}
+				if(dir == BrickDir.up){
+					if(brick.x == x && brick.y == y-1 && y-1 > 0){
+						neighbors[j]=brick;
+					}
+					continue;
+				}
+				if(dir == BrickDir.down){
+					if(brick.x == x && brick.y == y+1){
+						neighbors[j]=brick;
+					}
+					continue;
+				}
+			}
 			
 		}
 	}

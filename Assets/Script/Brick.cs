@@ -36,6 +36,7 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	void Update () {
 		ResetNeighbors();
 		ResetSprite();
+		UpdateProgress();
 	}
 
 	void ResetNeighbors(){
@@ -116,6 +117,13 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 		sprietRender.sprite = texture;
 	}
 
+	void UpdateProgress(){
+		if(progress >= 1.0f)return;
+		progress+=(Time.deltaTime*speed);
+		if(progress>1.0f){
+			progress = 1.0f;
+		}
+	}
 	public void OnDrag(PointerEventData pointer){
 		var p = Main.instance.uiCamera.ScreenToWorldPoint(Input.mousePosition);
 		p.z = rectTransform.position.z;

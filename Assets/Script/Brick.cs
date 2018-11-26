@@ -2,6 +2,80 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+public class BrickManager{
+	Dictionary<int,Dictionary<int,Brick>> bricks = new Dictionary<int, Dictionary<int, Brick>>();
+	Dictionary<int, int> countX = new Dictionary<int, int>();
+	Dictionary<int, int> countY = new Dictionary<int, int>();
+	public int minX = int.MaxValue, minY = int.MaxValue, maxX = int.MinValue, maxY = int.MinValue;
+	public void Add(Brick brick){
+		if(!bricks.ContainsKey(brick.x)){
+			bricks.Add(brick.x, new Dictionary<int,Brick>());
+		}
+		bricks[brick.x][brick.y] = brick;
+		if(!countX.ContainsKey(brick.x)){
+			countX[brick.x] = 0;
+		}
+		countX[brick.x]++;
+		if(brick.x<minX)
+		{
+			minX = brick.x;
+		}
+		if(brick.x>maxX)
+		{
+			maxX = brick.x;
+		}
+
+		if(!countY.ContainsKey(brick.y)){
+			countY[brick.y] = 0;
+		}
+		countY[brick.y]++;
+		if(brick.y<minY)
+		{
+			minY = brick.y;
+		}
+		if(brick.y>maxY)
+		{
+			maxY = brick.y;
+		}
+	}
+
+	public void Remove(Brick brick){
+		if(!bricks.ContainsKey(brick.x)){
+			return;
+		}
+		bricks[brick.x].Remove(brick.y);
+		countX[brick.x]--;
+		countY[brick.y]--;
+	}
+
+	public Brick At(int x, int y){
+		if(!bricks.ContainsKey(x)){
+			return null;
+		}
+		Brick brick = null;
+		if(bricks[x].TryGetValue(y, out brick)){
+			return brick;
+		}
+		return null;
+	}
+
+	public int MinX(){
+		return minX;
+	}
+
+	public int MaxX(){
+		return maxX;
+	}
+
+	public int MinY(){
+		return minY;
+	}
+	
+	public int MaxY(){
+		return maxY;
+	}
+
+}
 public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	public enum Direction
 	{
@@ -11,7 +85,7 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 		left,
 		right
 	}
-	static public List<Brick> bricks = new List<Brick>();
+	static public BrickManager brickManager = new BrickManager();
 	RectTransform rectTransform;
 	public float progress = 0.0f;
 	public float speed = 0.0f;
@@ -26,10 +100,10 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	}
 
 	void OnEnable(){
-		bricks.Add(this);
+		brickManager.Add(this);
 	}
 	void OnDisable(){
-		bricks.Remove(this);
+		brickManager.Remove(this);
 	}
 	
 	// Update is called once per frame
@@ -41,8 +115,8 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 	void ResetNeighbors(){
 		if(x < 0 || y < 0)return;
-		for(var i = 0; i < bricks.Count; i++){
-			var brick = bricks[i];
+		for(var i = 0; i < brickManager.Count; i++){
+			var brick = brickManager[i];
 			for (var j = 0; j < dirs.Length; j++){
 				var dir = dirs[j];
 				if(dir == Direction.none)continue;

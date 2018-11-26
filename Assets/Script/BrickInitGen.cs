@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BrickInitGen : MonoBehaviour {
-
 	public Transform parent;
 	public GameObject target;
 	public int countx, county;
@@ -23,9 +22,9 @@ public class BrickInitGen : MonoBehaviour {
 				brick.x = i;
 				brick.y = county-j;
 				if(brick.x == 0 && brick.y == 0){
-					
+					brick.dirs = new Brick.Direction[] {Brick.Direction.top, Brick.Direction.bot};
+					brick.SetIncomingDir(Brick.Direction.top);
 				}
-				
 			}
 		}
 	}

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
-	public enum BrickDir
+	public enum Direction
 	{
 		none,
 		top,
@@ -15,9 +15,9 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	RectTransform rectTransform;
 	public float progress = 0.0f;
 	public float speed = 0.0f;
-	public BrickDir[] dirs = new BrickDir[2];
-	public BrickDir incomeDir = BrickDir.none;
-	public BrickDir outcomeDir = BrickDir.none;
+	public Direction[] dirs = new Direction[2];
+	public Direction incomeDir = Direction.none;
+	public Direction outcomeDir = Direction.none;
 	public Brick[] neighbors = new Brick[2];
 	public int x = -1, y = -1;
 	// Use this for initialization
@@ -44,26 +44,26 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 			var brick = bricks[i];
 			for (var j = 0; j < dirs.Length; j++){
 				var dir = dirs[j];
-				if(dir == BrickDir.none)continue;
-				if(dir == BrickDir.left){
+				if(dir == Direction.none)continue;
+				if(dir == Direction.left){
 					if(brick.x == x-1 && brick.y == y && x-1 > 0){
 						neighbors[j]=brick;
 					}
 					continue;
 				}
-				if(dir == BrickDir.right){
+				if(dir == Direction.right){
 					if(brick.x == x+1 && brick.y == y){
 						neighbors[j]=brick;
 					}
 					continue;
 				}
-				if(dir == BrickDir.top){
+				if(dir == Direction.top){
 					if(brick.x == x && brick.y == y-1 && y-1 > 0){
 						neighbors[j]=brick;
 					}
 					continue;
 				}
-				if(dir == BrickDir.bot){
+				if(dir == Direction.bot){
 					if(brick.x == x && brick.y == y+1){
 						neighbors[j]=brick;
 					}
@@ -78,16 +78,16 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 		isLeft = isRight = isTop = isBot = false;
 		Sprite texture;
 		foreach(var dir in dirs){
-			if(dir == BrickDir.top){
+			if(dir == Direction.top){
 				isTop = true;
 			}
-			else if(dir == BrickDir.bot){
+			else if(dir == Direction.bot){
 				isBot = true;
 			}
-			else if(dir == BrickDir.left){
+			else if(dir == Direction.left){
 				isLeft = true;
 			}
-			else if(dir == BrickDir.right){
+			else if(dir == Direction.right){
 				isRight = true;
 			}
 		}
@@ -130,5 +130,45 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 		var nearest = Main.instance.gridMgr.GetNearestGrid(p).transform.position;
 		nearest.z = rectTransform.position.z;
 		rectTransform.position = nearest;
+	}
+
+	public void SetIncomingDir(Direction direction){
+		if(direction!=dirs[0] && direction!=dirs[1]){
+			Debug.LogWarning("set wrong direction: " + direction);
+			return;
+		}
+		incomeDir = direction;
+		if(direction==dirs[0]){
+			outcomeDir = dirs[1];
+		}
+		else{
+			outcomeDir = dirs[0];
+		}
+	}
+
+	static public Direction[] RandomDirs(){
+		var r = Random.Range(0,7);
+		if(r == 0){
+			return new Direction[] {Direction.none, Direction.none};
+		}
+		else if(r == 1){
+			return new Direction[] {Direction.top, Direction.left};
+		}
+		else if(r == 2){
+			return new Direction[] {Direction.top, Direction.right};
+		}
+		else if(r == 3){
+			return new Direction[] {Direction.bot, Direction.right};
+		}
+		else if(r == 4){
+			return new Direction[] {Direction.bot, Direction.left};
+		}
+		else if(r == 5){
+			return new Direction[] {Direction.top, Direction.bot};
+		}
+		else if(r == 6){
+			return new Direction[] {Direction.left, Direction.right};
+		}
+		return new Direction[] {Direction.none, Direction.none};
 	}
 }

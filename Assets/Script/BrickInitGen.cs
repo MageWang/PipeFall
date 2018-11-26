@@ -10,19 +10,22 @@ public class BrickInitGen : MonoBehaviour {
 	public Vector2 distance;
 	// Use this for initialization
 	void Start () {
-		for (var j = county; j >= 0; j--) {
-			for (var i = 0; i < countx; i++) {
-			
+		for (var j = county; j >= 0; j--) 
+		{
+			for (var i = 0; i < countx; i++) 
+			{
 				var o = Instantiate (target);
-				
 				o.transform.parent = parent;
 				o.transform.position = target.transform.position;
 				o.transform.localPosition += new Vector3 (i * distance.x, j * distance.y);
 				var brick = o.GetComponent<Brick>();
-				if(brick != null){
-					brick.x = i;
-					brick.y = county-j;
+				if(brick == null)continue;
+				brick.x = i;
+				brick.y = county-j;
+				if(brick.x == 0 && brick.y == 0){
+					
 				}
+				
 			}
 		}
 	}

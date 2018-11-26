@@ -6,8 +6,8 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	public enum BrickDir
 	{
 		none,
-		up,
-		down,
+		top,
+		bot,
 		left,
 		right
 	}
@@ -35,6 +35,7 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	// Update is called once per frame
 	void Update () {
 		ResetNeighbors();
+		ResetSprite();
 	}
 
 	void ResetNeighbors(){
@@ -56,21 +57,63 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 					}
 					continue;
 				}
-				if(dir == BrickDir.up){
+				if(dir == BrickDir.top){
 					if(brick.x == x && brick.y == y-1 && y-1 > 0){
 						neighbors[j]=brick;
 					}
 					continue;
 				}
-				if(dir == BrickDir.down){
+				if(dir == BrickDir.bot){
 					if(brick.x == x && brick.y == y+1){
 						neighbors[j]=brick;
 					}
 					continue;
 				}
 			}
-			
 		}
+	}
+
+	void ResetSprite(){
+		bool isLeft, isRight, isTop, isBot;
+		isLeft = isRight = isTop = isBot = false;
+		Sprite texture;
+		foreach(var dir in dirs){
+			if(dir == BrickDir.top){
+				isTop = true;
+			}
+			else if(dir == BrickDir.bot){
+				isBot = true;
+			}
+			else if(dir == BrickDir.left){
+				isLeft = true;
+			}
+			else if(dir == BrickDir.right){
+				isRight = true;
+			}
+		}
+		if(isTop && isLeft){
+			texture = Config.instance.texturePipes[1];
+		}
+		else if(isTop && isRight){
+			texture = Config.instance.texturePipes[2];
+		}
+		else if(isBot && isRight){
+			texture = Config.instance.texturePipes[3];
+		}
+		else if(isBot && isLeft){
+			texture = Config.instance.texturePipes[4];
+		}
+		else if(isTop && isBot){
+			texture = Config.instance.texturePipes[5];
+		}
+		else if(isLeft && isRight){
+			texture = Config.instance.texturePipes[6];
+		}
+		else{
+			texture = Config.instance.texturePipes[0];
+		}
+		var sprietRender = GetComponent<SpriteRenderer>();
+		sprietRender.sprite = texture;
 	}
 
 	public void OnDrag(PointerEventData pointer){
@@ -81,7 +124,6 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	}
 
 	public void OnEndDrag(PointerEventData pointer){
-		
 		// move to nearest grid
 		var p = Main.instance.uiCamera.ScreenToWorldPoint(Input.mousePosition);
 		p.z = rectTransform.position.z;

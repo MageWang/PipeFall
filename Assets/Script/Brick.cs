@@ -25,6 +25,7 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	public Direction outcomeDir = Direction.none;
 	public Brick[] neighbors = new Brick[2];
 	public int _x = -1, _y = -1;
+	public bool inQueue = false;
 	public int x{
 		get{
 			return _x;
@@ -60,6 +61,7 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	
 	// Update is called once per frame
 	void Update () {
+		if(inQueue)return;
 		ResetNeighbors();
 		ResetSprite();
 		UpdateProgress();

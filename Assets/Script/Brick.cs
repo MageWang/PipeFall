@@ -70,25 +70,50 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 		for (var j = 0; j < dirs.Length; j++){
 			var dir = dirs[j];
-			if(dir == Direction.none)continue;
 			if(dir == Direction.left){
-				neighbors[j]=brickManager.At(x-1,y);
+				var brick = brickManager.At(x-1,y);
+				if(brick!=null && brick.outcomeDir == Direction.right){
+					neighbors[j]=brick;
+				}
+				else{
+					neighbors[j]=null;
+				}
 				continue;
 			}
-			if(dir == Direction.right){
-				neighbors[j]=brickManager.At(x+1,y);
+			else if(dir == Direction.right){
+				var brick = brickManager.At(x+1,y);
+				if(brick!=null && brick.outcomeDir == Direction.left){
+					neighbors[j]=brick;
+				}
+				else{
+					neighbors[j]=null;
+				}
 				continue;
 			}
-			if(dir == Direction.top){
-				neighbors[j]=brickManager.At(x,y-1);
+			else if(dir == Direction.top){
+				var brick = brickManager.At(x,y-1);
+				if(brick!=null && brick.outcomeDir == Direction.bot){
+					neighbors[j]=brick;
+				}
+				else{
+					neighbors[j]=null;
+				}
 				continue;
 			}
-			if(dir == Direction.bot){
-				neighbors[j]=brickManager.At(x,y+1);
+			else if(dir == Direction.bot){
+				var brick = brickManager.At(x,y+1);
+				if(brick!=null && brick.outcomeDir == Direction.top){
+					neighbors[j]=brick;
+				}
+				else{
+					neighbors[j]=null;
+				}
 				continue;
+			}
+			else{
+				neighbors[j] = null;
 			}
 		}
-		
 	}
 
 	void ResetSprite(){
@@ -173,6 +198,31 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 	static public Direction[] RandomDirs(){
 		var r = Random.Range(0,7);
+		if(r == 0){
+			return new Direction[] {Direction.none, Direction.none};
+		}
+		else if(r == 1){
+			return new Direction[] {Direction.top, Direction.left};
+		}
+		else if(r == 2){
+			return new Direction[] {Direction.top, Direction.right};
+		}
+		else if(r == 3){
+			return new Direction[] {Direction.bot, Direction.right};
+		}
+		else if(r == 4){
+			return new Direction[] {Direction.bot, Direction.left};
+		}
+		else if(r == 5){
+			return new Direction[] {Direction.top, Direction.bot};
+		}
+		else if(r == 6){
+			return new Direction[] {Direction.left, Direction.right};
+		}
+		return new Direction[] {Direction.none, Direction.none};
+	}
+	static public Direction[] RandomAvailableDirs(){
+		var r = Random.Range(1,7);
 		if(r == 0){
 			return new Direction[] {Direction.none, Direction.none};
 		}

@@ -64,12 +64,15 @@ public class BrickMapGen : MonoBehaviour {
 				arr.Add(i);
 			}
 			// choose 1 - 2 from arr
-			arr.Sort((a,b)=>{
-				return Random.Range(-1,2);
-			});
+			for(var i = 0; i < arr.Count; i++){
+				var r = Random.Range(0,arr.Count);
+				var t = arr[i];
+				arr[i] = arr[r];
+				arr[r] = t;
+			}
 			for(var i = 0; i < width; i++){
 				if(i == arr[0]){
-					res.Add(Brick.RandomDirs());
+					res.Add(Brick.RandomAvailableDirs());
 				}
 				else{
 					res.Add(new Brick.Direction[2]{
@@ -80,6 +83,4 @@ public class BrickMapGen : MonoBehaviour {
 		}
 		return res;
 	}
-	
-
 }

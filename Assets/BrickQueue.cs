@@ -26,8 +26,8 @@ public class BrickQueue : MonoBehaviour {
 				brick.dirs = Brick.RandomAvailableDirs();
 			}
 		}
-		var targetSprite = GetComponent<SpriteRenderer> ();
-		var genSprite = gen.GetComponent<SpriteRenderer> ();
+		// var targetSprite = GetComponent<SpriteRenderer> ();
+		// var genSprite = gen.GetComponent<SpriteRenderer> ();
 		// if (!genSprite.bounds.Intersects (targetSprite.bounds)) {
 		// 	gen = null;
 		// }

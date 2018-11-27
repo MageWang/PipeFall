@@ -21,13 +21,10 @@ public class BrickInitGen : MonoBehaviour {
 				if(brick == null)continue;
 				brick.x = i;
 				brick.y = county-j;
+				brick.dirs = BrickMapGen.GetInstance().At(brick.x, brick.y);
 				if(brick.x == 0 && brick.y == 0){
-					brick.dirs = new Brick.Direction[] {Brick.Direction.top, Brick.Direction.bot};
 					brick.SetIncomingDir(Brick.Direction.top);
 					brick.speed = 0.01f;
-				}
-				else{
-					brick.dirs = Brick.RandomDirs();
 				}
 			}
 		}

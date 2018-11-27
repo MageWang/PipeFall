@@ -26,6 +26,7 @@ public class BrickGenerater : MonoBehaviour {
 			if(brick != null){
 				brick.x = x;
 				brick.y = y;
+				brick.dirs = BrickMapGen.GetInstance().At(brick.x, brick.y);
 				y++;
 			}
 		}

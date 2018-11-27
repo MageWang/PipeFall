@@ -52,10 +52,10 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	}
 
 	void OnEnable(){
-		brickManager.Add(this);
+		if(brickManager != null) brickManager.Add(this);
 	}
 	void OnDisable(){
-		brickManager.Remove(this);
+		if(brickManager != null) brickManager.Remove(this);
 	}
 	
 	// Update is called once per frame

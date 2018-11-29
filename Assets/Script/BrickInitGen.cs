@@ -15,7 +15,7 @@ public class BrickInitGen : MonoBehaviour {
 			{
 				var o = Instantiate (target);
 				o.transform.parent = parent;
-				o.transform.position = target.transform.position;
+				o.transform.position = transform.position;
 				o.transform.localPosition += new Vector3 (i * distance.x, j * distance.y);
 				var brick = o.GetComponent<Brick>();
 				if(brick == null)continue;

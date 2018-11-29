@@ -106,7 +106,7 @@ Shader "Sprites/UltimateSpriteMask"
 				fixed4 c1 = tex2D(_ColorTex, screenUV * 3 - float2(_Coord.z, _Coord.w)) * IN.color;
 				c1.a = tex2D(_MainTex, IN.texcoord).a * tex2D(_ColorTex, screenUV * 3 - float2(_Coord.z, _Coord.w)).a;
 				#endif
-
+				
 				#ifdef ST_OFF
 				fixed4 c1 = tex2D(_ColorTex, IN.texcoord * float2(_Coord.x, _Coord.y) - float2(_Coord.z, _Coord.w)) * IN.color;
 				c1.a = tex2D(_MainTex, IN.texcoord).a * tex2D(_ColorTex, IN.texcoord * float2(_Coord.x, _Coord.y) - float2(_Coord.z, _Coord.w)).a; 
@@ -114,14 +114,24 @@ Shader "Sprites/UltimateSpriteMask"
 
 				c1.rgb *= c1.a;			
 				fixed4 c2 = tex2D(_MainTex, IN.texcoord) * IN.color;
-				c2.a = tex2D(_MainTex, IN.texcoord).a; 
+				c2.a = tex2D(_MainTex, IN.texcoord).a;
 				fixed4 finC;
 
 				#ifdef AM_ON
 				finC = c2;
 				finC.a = lerp(c2.a, c1.a, _Opacity);
 				finC.rgb *= finC.a;
-				#endif			
+
+
+				//c2.rgb *= c2.a;
+				//finC = lerp(c2, c1, 0);			
+				//finC.a = lerp(c2.a, c1.a, _Opacity);
+				float a = max(0,sign(finC.a-_Opacity));
+				finC.a = a;
+				//finC.rgb *= a;
+				//finC = tex2D(_MainTex, IN.texcoord) * IN.color;
+				//finC.rgb *= max(0,_Opacity*c1.a);
+				#endif
 
 				#ifdef AM_OFF
 				c2.rgb *= c2.a;
@@ -130,7 +140,6 @@ Shader "Sprites/UltimateSpriteMask"
 				#endif
 
 				return finC;
-				
 			}
 
 			ENDCG

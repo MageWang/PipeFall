@@ -21,7 +21,7 @@ public class BrickGenerater : MonoBehaviour {
 		if (gen == null) {
 			gen = Instantiate(target);
 			gen.transform.parent = parent;
-			gen.transform.position = target.transform.position;
+			gen.transform.position = transform.position;
 			var brick = gen.GetComponent<Brick>();
 			if(brick != null){
 				brick.x = x;
@@ -30,11 +30,10 @@ public class BrickGenerater : MonoBehaviour {
 				y++;
 			}
 		}
-		var targetSprite = target.GetComponent<SpriteRenderer> ();
+		var targetSprite = GetComponent<SpriteRenderer> ();
 		var genSprite = gen.GetComponent<SpriteRenderer> ();
 		if (!genSprite.bounds.Intersects (targetSprite.bounds)) {
 			gen = null;
 		}
-		
 	}
 }

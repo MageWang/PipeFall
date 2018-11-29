@@ -26,6 +26,12 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	public Brick[] neighbors = new Brick[2];
 	public int _x = -1, _y = -1;
 	public bool inQueue = false;
+	public GameObject pipeObject;
+	public Material waterMaterial;
+	public SpriteRenderer waterSpriteRenderer;
+	public SpriteRenderer pipeSpriteRenderer;
+	public SpriteRenderer spriteRenderer;
+
 	public int x{
 		get{
 			return _x;
@@ -48,13 +54,26 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	}
 	
 	// Use this for initialization
-	void Start () {
+	void Start(){
 		rectTransform = GetComponent<RectTransform>();
+
+		pipeObject = Instantiate(pipeObject);
+		pipeObject.transform.parent = this.transform;
+		pipeObject.transform.localPosition = new Vector3();
+		
+		waterSpriteRenderer = pipeObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
+		waterMaterial = new Material(waterSpriteRenderer.material);
+		
+		waterSpriteRenderer.material = waterMaterial;
+		pipeSpriteRenderer = pipeObject.GetComponent<SpriteRenderer>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		spriteRenderer.sprite = Config.instance.spriteBricks[0];
 	}
 
 	void OnEnable(){
 		if(brickManager != null) brickManager.Add(this);
 	}
+
 	void OnDisable(){
 		if(brickManager != null) brickManager.Remove(this);
 	}
@@ -119,9 +138,13 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	}
 
 	void ResetSprite(){
+
+		
+		waterMaterial.SetFloat("_Opacity", Mathf.Lerp(1.0f, 0.5f,progress));
+
 		bool isLeft, isRight, isTop, isBot;
 		isLeft = isRight = isTop = isBot = false;
-		Sprite texture;
+		
 		foreach(var dir in dirs){
 			if(dir == Direction.top){
 				isTop = true;
@@ -137,28 +160,74 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 			}
 		}
 		if(isTop && isLeft){
-			texture = Config.instance.texturePipes[1];
+			waterSpriteRenderer.sprite = Config.instance.spriteWaters[0];
+			pipeSpriteRenderer.sprite = Config.instance.spritePipes[0];
+			waterMaterial.SetTexture("_ColorTex", Config.instance.textWaters[0]);
+			if(incomeDir==Direction.top){
+				pipeObject.transform.localRotation = Quaternion.Euler(0,0,90);
+			}
+			else{
+				pipeObject.transform.localRotation = Quaternion.Euler(180,0,180);
+			}
 		}
 		else if(isTop && isRight){
-			texture = Config.instance.texturePipes[2];
+			waterSpriteRenderer.sprite = Config.instance.spriteWaters[0];
+			pipeSpriteRenderer.sprite = Config.instance.spritePipes[0];
+			waterMaterial.SetTexture("_ColorTex", Config.instance.textWaters[0]);
+			if(incomeDir==Direction.top){
+				pipeObject.transform.localRotation = Quaternion.Euler(0,180,90);
+			}
+			else{
+				pipeObject.transform.localRotation = Quaternion.Euler(180,180,180);
+			}
 		}
 		else if(isBot && isRight){
-			texture = Config.instance.texturePipes[3];
+			waterSpriteRenderer.sprite = Config.instance.spriteWaters[0];
+			pipeSpriteRenderer.sprite = Config.instance.spritePipes[0];
+			waterMaterial.SetTexture("_ColorTex", Config.instance.textWaters[0]);
+			if(incomeDir==Direction.bot){
+				pipeObject.transform.localRotation = Quaternion.Euler(0,0,-90);
+			}
+			else{
+				pipeObject.transform.localRotation = Quaternion.Euler(0,180,-180);
+			}
 		}
 		else if(isBot && isLeft){
-			texture = Config.instance.texturePipes[4];
+			waterSpriteRenderer.sprite = Config.instance.spriteWaters[0];
+			pipeSpriteRenderer.sprite = Config.instance.spritePipes[0];
+			waterMaterial.SetTexture("_ColorTex", Config.instance.textWaters[0]);
+			if(incomeDir==Direction.bot){
+				pipeObject.transform.localRotation = Quaternion.Euler(0,180,-90);
+			}
+			else{
+				pipeObject.transform.localRotation = Quaternion.Euler(0,0,-180);
+			}
 		}
 		else if(isTop && isBot){
-			texture = Config.instance.texturePipes[5];
+			waterSpriteRenderer.sprite = Config.instance.spriteWaters[1];
+			pipeSpriteRenderer.sprite = Config.instance.spritePipes[1];
+			waterMaterial.SetTexture("_ColorTex", Config.instance.textWaters[1]);
+			if(incomeDir==Direction.top){
+				pipeObject.transform.localRotation = Quaternion.Euler(0,0,-180);
+			}
+			else{
+				pipeObject.transform.localRotation = Quaternion.Euler(180,0,-180);
+			}
 		}
 		else if(isLeft && isRight){
-			texture = Config.instance.texturePipes[6];
+			waterSpriteRenderer.sprite = Config.instance.spriteWaters[1];
+			pipeSpriteRenderer.sprite = Config.instance.spritePipes[1];
+			waterMaterial.SetTexture("_ColorTex", Config.instance.textWaters[1]);
+			if(incomeDir==Direction.left){
+				pipeObject.transform.localRotation = Quaternion.Euler(0,0,-90);
+			}
+			else{
+				pipeObject.transform.localRotation = Quaternion.Euler(0,180,-90);
+			}
 		}
 		else{
-			texture = Config.instance.texturePipes[0];
+			pipeObject.SetActive(false);
 		}
-		var sprietRender = GetComponent<SpriteRenderer>();
-		sprietRender.sprite = texture;
 	}
 
 	void UpdateProgress(){

@@ -124,6 +124,7 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	}
 
 	void ResetSprite(){
+		pipeObject.SetActive(true);
 		waterMaterial.SetFloat("_Opacity", Mathf.Lerp(1.0f, 0.5f,progress));
 
 		bool isLeft, isRight, isTop, isBot;

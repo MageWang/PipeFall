@@ -16,6 +16,7 @@ public class BrickManager : MonoBehaviour {
 		public Brick brick;
 	}
 	public List<DebugBrick> debugBricks = new List<DebugBrick>();
+	public float minDistance = 0.05f;
 	static private BrickManager instance;
 	static public BrickManager GetInstance(){
 		return instance;
@@ -96,6 +97,19 @@ public class BrickManager : MonoBehaviour {
 		Brick brick = null;
 		if(bricks[x].TryGetValue(y, out brick)){
 			return brick;
+		}
+		return null;
+	}
+
+	public Brick At(Vector2 vector2){
+		foreach(var p in bricks){
+			if(p.Key < 0)continue;
+			foreach(var q in p.Value){
+				if(q.Key < 0)continue;
+				if(Vector3.Distance(q.Value.transform.position, vector2) <  minDistance){
+					return q.Value;
+				}
+			}
 		}
 		return null;
 	}

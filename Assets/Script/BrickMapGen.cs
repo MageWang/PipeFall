@@ -58,6 +58,13 @@ public class BrickMapGen : MonoBehaviour {
 				});
 			}
 		}
+		else if(y < 3){
+			for(var j = 0; j < width; j++){
+				res.Add(new Brick.Direction[2]{
+					Brick.Direction.none, Brick.Direction.none
+				});
+			}
+		}
 		else{
 			List<int> arr = new List<int>();
 			for(var i = 0; i < width; i++){

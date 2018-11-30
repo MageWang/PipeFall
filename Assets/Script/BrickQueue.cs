@@ -18,7 +18,7 @@ public class BrickQueue : MonoBehaviour {
 	void Update () {
 		if (gen == null) {
 			gen = Instantiate(target);
-			//gen.transform.parent = parent;
+			gen.transform.parent = this.transform;
 			gen.transform.position = transform.position;
 			var brick = gen.GetComponent<Brick>();
 			if(brick != null){

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Game : MonoBehaviour {
 	public bool isStart = false;
-	bool isRunning = false;
+	public bool isRunning = false;
 	public bool isEnd = false;
 	public bool isRestart = false;
 	public Broad broad;
+	public float waterSpeed = 0.3f;
 	static public Game instance;
 	void Awake(){
 		instance = this;
@@ -35,9 +36,9 @@ public class Game : MonoBehaviour {
 		var b = broad;
 		var brick = BrickManager.GetInstance().At(0,0);
 		yield return new WaitForSeconds(5.0f);
-		brick.speed = 0.5f;
+		brick.speed = waterSpeed;
 		brick.SetIncomingDir(Brick.Direction.top);
-		yield return new WaitForSeconds(5.0f);
+		yield return new WaitForSeconds(10.0f);
 		b.isStart = true;
 		
 	}

@@ -76,14 +76,36 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 	void OnDisable(){
 		if(brickManager != null) brickManager.Remove(this);
+		if(progress>0&&progress<1){
+			Game.instance.isEnd = true;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		ResetSprite();
 		if(inQueue)return;
 		ResetNeighbors();
-		ResetSprite();
+		
 		UpdateProgress();
+	}
+
+	Brick GetBrickFromDir(Direction direction){
+		if(direction == Direction.left){
+			return brickManager.At(x-1,y);
+		}
+		else if(direction == Direction.right){
+			return brickManager.At(x+1,y);
+		}
+		else if(direction == Direction.top){
+			return brickManager.At(x,y-1);
+		}
+		else if(direction == Direction.bot){
+			return brickManager.At(x,y+1);
+		}
+		else{
+			return null;
+		}
 	}
 
 	void ResetNeighbors(){
@@ -91,45 +113,9 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 		for (var j = 0; j < dirs.Length; j++){
 			var dir = dirs[j];
-			if(dir == Direction.left){
-				var brick = brickManager.At(x-1,y);
-				if(brick!=null && brick.outcomeDir == Direction.right){
-					neighbors[j]=brick;
-				}
-				else{
-					neighbors[j]=null;
-				}
-				continue;
-			}
-			else if(dir == Direction.right){
-				var brick = brickManager.At(x+1,y);
-				if(brick!=null && brick.outcomeDir == Direction.left){
-					neighbors[j]=brick;
-				}
-				else{
-					neighbors[j]=null;
-				}
-				continue;
-			}
-			else if(dir == Direction.top){
-				var brick = brickManager.At(x,y-1);
-				if(brick!=null && brick.outcomeDir == Direction.bot){
-					neighbors[j]=brick;
-				}
-				else{
-					neighbors[j]=null;
-				}
-				continue;
-			}
-			else if(dir == Direction.bot){
-				var brick = brickManager.At(x,y+1);
-				if(brick!=null && brick.outcomeDir == Direction.top){
-					neighbors[j]=brick;
-				}
-				else{
-					neighbors[j]=null;
-				}
-				continue;
+			var brick = GetBrickFromDir(dir);
+			if(brick != null){
+				neighbors[j] = brick;
 			}
 			else{
 				neighbors[j] = null;
@@ -138,8 +124,6 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 	}
 
 	void ResetSprite(){
-
-		
 		waterMaterial.SetFloat("_Opacity", Mathf.Lerp(1.0f, 0.5f,progress));
 
 		bool isLeft, isRight, isTop, isBot;
@@ -229,14 +213,49 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 			pipeObject.SetActive(false);
 		}
 	}
+	public Brick GetIncomingBrick(){
+		for(var i = 0; i < dirs.Length; i++){
+			if(incomeDir == dirs[i]){
+				return neighbors[i];
+			}
+		}
+		return null;
+	}
+
+	public Brick GetOutcomingBrick(){
+		for(var i = 0; i < dirs.Length; i++){
+			if(outcomeDir == dirs[i]){
+				return neighbors[i];
+			}
+		}
+		return null;
+	}
 
 	void UpdateProgress(){
 		if(progress >= 1.0f)return;
+		//var incomingBrick = GetIncomingBrick();
+		// if(speed <= 0.0f && incomingBrick!=null && Mathf.Abs(incomingBrick.progress - 1.0f) < 0.001f){
+		// 	speed = 0.5f;
+		// }
 		progress+=(Time.deltaTime*speed);
 		if(progress>1.0f){
+			if(!SetNeighborStart()){
+				Game.instance.isEnd = true;
+			}
 			progress = 1.0f;
+			speed = 0.0f;
 		}
 	}
+
+	bool SetNeighborStart(){
+		var brick = GetOutcomingBrick();
+		if(brick == null)return false;
+		if(!IsMatchNeighborDir(outcomeDir, brick))return false;
+		brick.speed=speed;
+		brick.SetIncomingDir(GetReverseDir(outcomeDir));
+		return true;
+	}
+
 	public void OnDrag(PointerEventData pointer){
 		var p = Main.instance.uiCamera.ScreenToWorldPoint(Input.mousePosition);
 		p.z = rectTransform.position.z;
@@ -255,7 +274,8 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 	public void SetIncomingDir(Direction direction){
 		if(direction!=dirs[0] && direction!=dirs[1]){
-			Debug.LogWarning("set wrong direction: " + direction);
+			incomeDir = Direction.none;
+			outcomeDir = Direction.none;
 			return;
 		}
 		incomeDir = direction;
@@ -267,6 +287,30 @@ public class Brick : MonoBehaviour, IDragHandler, IEndDragHandler {
 		}
 	}
 
+	public bool IsMatchNeighborDir(Direction dir, Brick b){
+		var revDir = GetReverseDir(dir);
+		for(var i = 0; i < b.dirs.Length; i++){
+			if(b.dirs[i]==revDir)return true;
+		}
+		return false;
+	}
+
+	static public Direction GetReverseDir(Direction dir){
+		switch(dir){
+			case Direction.none:
+				return Direction.none;
+			case Direction.left:
+				return Direction.right;
+			case Direction.right:
+				return Direction.left;
+			case Direction.top:
+				return Direction.bot;
+			case Direction.bot:
+				return Direction.top;
+			default:
+				return Direction.none;
+		}
+	}
 	static public Direction[] RandomDirs(){
 		var r = Random.Range(0,7);
 		if(r == 0){

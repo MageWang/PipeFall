@@ -24,7 +24,7 @@ public class BrickInitGen : MonoBehaviour {
 				brick.dirs = BrickMapGen.GetInstance().At(brick.x, brick.y);
 				if(brick.x == 0 && brick.y == 0){
 					brick.SetIncomingDir(Brick.Direction.top);
-					brick.speed = 0.01f;
+					//brick.speed = 0.01f;
 				}
 			}
 		}

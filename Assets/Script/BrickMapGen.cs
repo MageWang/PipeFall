@@ -52,6 +52,7 @@ public class BrickMapGen : MonoBehaviour {
 					});
 					continue;
 				}
+				//res.Add(Brick.RandomAvailableDirs());
 				res.Add(new Brick.Direction[2]{
 					Brick.Direction.none, Brick.Direction.none
 				});
@@ -75,6 +76,7 @@ public class BrickMapGen : MonoBehaviour {
 					res.Add(Brick.RandomAvailableDirs());
 				}
 				else{
+					//res.Add(Brick.RandomAvailableDirs());
 					res.Add(new Brick.Direction[2]{
 						Brick.Direction.none, Brick.Direction.none
 					});

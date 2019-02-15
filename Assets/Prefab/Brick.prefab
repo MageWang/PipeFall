@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114805729424455808}
   - component: {fileID: 61515863599150426}
   m_Layer: 0
-  m_Name: brick
+  m_Name: Brick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
